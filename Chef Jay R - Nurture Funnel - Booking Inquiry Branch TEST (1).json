@@ -1,0 +1,628 @@
+{
+  "name": "Chef Jay R - Nurture Funnel - Booking Inquiry Branch TEST",
+  "nodes": [
+    {
+      "parameters": {
+        "form": "260776998483076"
+      },
+      "type": "n8n-nodes-base.jotFormTrigger",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -80
+      ],
+      "id": "d94004ae-10f9-4a83-b452-a65f90a35b7b",
+      "name": "RECEPTIONIST (Jotform Entry)",
+      "webhookId": "215c6470-c888-4992-9935-35e19e9dce60",
+      "credentials": {
+        "jotFormApi": {
+          "id": "NH8Tnc2OLuVhtwU1",
+          "name": "JotForm account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \nLead fills out form in your link in bio"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "83b5a29b-5e9f-4ea1-b3d7-c0399ea831b2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a1ef0eff-5518-4eda-b568-f699ffba51bc",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        240,
+        -96
+      ],
+      "id": "80c3c9e7-10d5-4692-a33e-5a4ca471b8c1",
+      "name": "Qualifications Assistant (Email?)"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -80
+      ],
+      "id": "902530ea-efa0-4c7c-b932-a4191065178b",
+      "name": "ACCOUNT MNGR ASST (Wait 24 hr to send email)",
+      "webhookId": "6aa3a8ba-e19a-439b-aa9a-b4ab3e57081b"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('RECEPTIONIST (Jotform Entry)').item.json.Email }}",
+        "subject": "We got your inquiry — Chef Jay R",
+        "message": "=Hi  {{ $('RECEPTIONIST (Jotform Entry)').item.json.Name.first }}! \n \nThanks for your interest in Chef Jay R.\n\nYou’re now on the list to receive updates about upcoming experiences, classes, menus, and special events.\n\nWe’re excited to stay connected.\n\nWarmly,\nChef Jay R Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        64
+      ],
+      "id": "fd287f46-1eca-4ff8-aeee-79e71e02be52",
+      "name": "EMAIL CONCIERGE (Send a message)",
+      "webhookId": "987df897-31da-41bf-85f5-bc1a31be0b6d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3u2lib4lbLHiKD7m",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('RECEPTIONIST (Jotform Entry)').item.json.Email }}",
+        "subject": "Just following up — Chef Jay R",
+        "message": "=Hi  {{ $('RECEPTIONIST (Jotform Entry)').item.json.Name.first }}\nJust following up on your recent inquiry with Chef Jay R.\n\nIf you're still interested, feel free to reply with any extra details, questions, or timing you're considering. We’d be happy to learn more about what you’re planning.\n\nWarmly,\nChef Jay R Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        64
+      ],
+      "id": "953ddbbe-7bdc-4f09-993d-2a129e04bbe2",
+      "name": "FOLLOW UP COORDINATOR (2nd Email)",
+      "webhookId": "116a18e5-0b05-46c4-a891-8cec66ead212",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3u2lib4lbLHiKD7m",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU",
+          "mode": "list",
+          "cachedResultName": "Chef Jay R - CONTACTS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2145986574,
+          "mode": "list",
+          "cachedResultName": "Leads_Test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU/edit#gid=2145986574"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email",
+              "lookupValue": "={{ $('RECORDS CLERK (Append Row)').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        64
+      ],
+      "id": "66a6bd2e-b171-4926-a3e6-c22b43849f54",
+      "name": "LEAD LOOKUP CLERK (Lookup row)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pMwUNRBcxVOTfwVt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU",
+          "mode": "list",
+          "cachedResultName": "Chef Jay R - CONTACTS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2145986574,
+          "mode": "list",
+          "cachedResultName": "Leads_Test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU/edit#gid=2145986574"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "row_number": 0,
+            "Email": "={{ $('RECEPTIONIST (Jotform Entry)').item.json.Email }}",
+            "Status": "FOLLOW UP SENT"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Type",
+              "displayName": "Lead Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1616,
+        64
+      ],
+      "id": "860129ae-efe6-4f11-babb-67e42f6f6e92",
+      "name": "PIPELINE MANAGER (Update row)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pMwUNRBcxVOTfwVt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fed5ea1a-aab8-4c2c-a1e2-5bb8dae4e1c7",
+              "name": "Status",
+              "value": "FOLLOW-UP SENT",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        64
+      ],
+      "id": "d396c075-be1b-451b-8e05-a406c20797fe",
+      "name": "FILE PREP ASSISTANT (Edit Fields)"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU",
+          "mode": "list",
+          "cachedResultName": "Chef Jay R - CONTACTS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2145986574,
+          "mode": "list",
+          "cachedResultName": "Leads_Test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IM7ZoHamFMcvLst7nQIg_d7xAdq96krobZ4rFpFXKuU/edit#gid=2145986574"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name.first }} {{ $json.Name.last }}",
+            "Email": "={{ $json.Email }}",
+            "Phone": "={{ $json['Phone Number'].full }}",
+            "Location": "={{ $json['Location / City'] }}",
+            "Date Added": "={{ $now }}",
+            "Status": "NEW",
+            "Source": "Website Form",
+            "Interest Type": "={{ $json['Interest Type'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interest Type",
+              "displayName": "Interest Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        48,
+        64
+      ],
+      "id": "521051f1-d500-4727-b803-280561b8b204",
+      "name": "RECORDS CLERK (Append Row)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pMwUNRBcxVOTfwVt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \nAdds to google sheet (never miss a lead)"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        288
+      ],
+      "typeVersion": 1,
+      "id": "cf41484f-e064-4ad7-8909-5fe7eef8245b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \nAutomatic email is sent (warm greeting) Additional follow up email is sent 24 hours later"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "5d08567b-ec9c-4d15-b0f9-646c44bf0bff",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \nGoogle sheet updates the status of that lead"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "e8f3abcc-0a82-40b2-88b2-5115d88c3f5d",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "RECEPTIONIST (Jotform Entry)": {
+      "main": [
+        [
+          {
+            "node": "RECORDS CLERK (Append Row)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qualifications Assistant (Email?)": {
+      "main": [
+        [
+          {
+            "node": "EMAIL CONCIERGE (Send a message)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ACCOUNT MNGR ASST (Wait 24 hr to send email)": {
+      "main": [
+        [
+          {
+            "node": "FOLLOW UP COORDINATOR (2nd Email)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EMAIL CONCIERGE (Send a message)": {
+      "main": [
+        [
+          {
+            "node": "ACCOUNT MNGR ASST (Wait 24 hr to send email)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FOLLOW UP COORDINATOR (2nd Email)": {
+      "main": [
+        [
+          {
+            "node": "LEAD LOOKUP CLERK (Lookup row)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LEAD LOOKUP CLERK (Lookup row)": {
+      "main": [
+        [
+          {
+            "node": "FILE PREP ASSISTANT (Edit Fields)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PIPELINE MANAGER (Update row)": {
+      "main": [
+        []
+      ]
+    },
+    "FILE PREP ASSISTANT (Edit Fields)": {
+      "main": [
+        [
+          {
+            "node": "PIPELINE MANAGER (Update row)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RECORDS CLERK (Append Row)": {
+      "main": [
+        [
+          {
+            "node": "Qualifications Assistant (Email?)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "958cc051-43d5-472d-b326-640a2475978b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "551af983a94c1094191adb7775ec0fcb867777b59998de47ff7d4ff9274f1a6f"
+  },
+  "id": "3aWZ9EKBqcmpCFFZ",
+  "tags": [
+    {
+      "updatedAt": "2026-03-27T01:04:42.990Z",
+      "createdAt": "2026-03-27T01:04:42.990Z",
+      "id": "0qbEQUnb6H6HMaK2",
+      "name": "nurture funnel"
+    },
+    {
+      "updatedAt": "2026-03-27T01:04:23.247Z",
+      "createdAt": "2026-03-27T01:04:23.247Z",
+      "id": "9nvp3vOAEdpyTFNy",
+      "name": "personal chef"
+    },
+    {
+      "updatedAt": "2026-03-27T01:05:04.070Z",
+      "createdAt": "2026-03-27T01:05:04.070Z",
+      "id": "Xlc72ddntuqPAWbV",
+      "name": "leads"
+    }
+  ]
+}
